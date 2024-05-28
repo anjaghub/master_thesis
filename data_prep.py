@@ -104,7 +104,7 @@ def prepare_data(data_files):
     # Putting the owner confirm keys in one column
     concatenated_df['owner_confirm_keys'] = concatenated_df['owner_confirm_2.keys'].combine_first(concatenated_df['owner_confirm.keys'])
     # Putting choice_frame_location and yc_resp.keys together and change their values in left and right
-    merged_df['choice_location'] = concatenated_df['yc_resp.keys'].combine_first(concatenated_df['choice_frame_location'])
+    concatenated_df['choice_location'] = concatenated_df['yc_resp.keys'].combine_first(concatenated_df['choice_frame_location'])
     concatenated_df['choice_location'] = concatenated_df['choice_location'].apply(map_choice_location)
 
     # Create bool columns for too slow and wrong responses
