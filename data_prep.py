@@ -77,7 +77,7 @@ def prepare_data(data_files):
                 df[col] = pd.NA
 
         # Creating subsets of data because every trail has several rows in raw data
-        first_subset = df[['ident_block_trial','participant','session','date']].drop_duplicates() # auto create
+        first_subset = df[['ident_block_trial','participant','session','date']].drop_duplicates().dropna() # auto create
         second_subset = df[['ident_block_trial','block','trial','chooser','stim1','stim2','choice_frame_location','owner','value','value_distribution','identifier_chooser_owner_value']].dropna() # condition file
         third_subset = df[['ident_block_trial','yc_resp.keys']].dropna() # you choose color choice
         fourth_subset = df[['ident_block_trial', 'owner_confirm_2.keys', 'owner_confirm_2.rt']].dropna() # yc owner confirmation
@@ -117,17 +117,17 @@ def prepare_data(data_files):
     concatenated_df.loc[concatenated_df['value_distribution'] == 10, 'identifier_chooser_owner_value'] = concatenated_df.loc[concatenated_df['value_distribution'] == 10, 'identifier_chooser_owner_value'].apply(swap_lose_win)
 
     # Rename identifier, stim1, stim2, choice_confirmation.keys columns
-    new_names = {'stim1': 'left_color', 'stim2': 'right_color', 'choice_confirmation.keys': 'choice_confirm_keys', 'identifier_chooser_owner_value':'identifier_chooser_owner_value_corr'}
+    new_names = {'date':'raw_date','stim1': 'left_color', 'stim2': 'right_color', 'choice_confirmation.keys': 'choice_confirm_keys', 'identifier_chooser_owner_value':'identifier_chooser_owner_value_corr'}
     concatenated_df = concatenated_df.rename(columns=new_names)
 
     # Create date and time column from date
-    concatenated_df['parsed_datetime'] = concatenated_df['date'].apply(parse_custom_datetime)
+    concatenated_df['parsed_datetime'] = concatenated_df['raw_date'].apply(parse_custom_datetime)
     # Extract the date and time components
-    concatenated_df['date_new'] = concatenated_df['parsed_datetime'].dt.date
+    concatenated_df['date'] = concatenated_df['parsed_datetime'].dt.date
     concatenated_df['time'] = concatenated_df['parsed_datetime'].dt.time
 
     # Select new relevant columns and get rid of the old ones which are not necessary anymore
-    relevant_columns = ['date_new', # date when data collection happened
+    relevant_columns = ['date', # date when data collection happened
                         'time',
                         'session', # session id
                         'participant', # participant id
