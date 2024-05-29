@@ -57,6 +57,7 @@ def prepare_data(data_files):
                         'owner_confirm.rt', # relevant reaction time
                         'wrong_answer.started', # in cc and yc condition when confirming owner
                         'too_slow.started', # in cc and yc condition when confirming owner
+                        'experiment_trials.thisTrialN'
                         ] 
 
     # Create empty list to store files
@@ -78,7 +79,7 @@ def prepare_data(data_files):
 
         # Creating subsets of data because every trail has several rows in raw data
         first_subset = df[['ident_block_trial','participant','session','date']].drop_duplicates().dropna() # auto create
-        second_subset = df[['ident_block_trial','block','trial','chooser','stim1','stim2','choice_frame_location','owner','value','value_distribution','identifier_chooser_owner_value']].dropna() # condition file
+        second_subset = df[['ident_block_trial','block','trial','chooser','stim1','stim2','choice_frame_location','owner','value','value_distribution','identifier_chooser_owner_value','experiment_trials.thisTrialN']].dropna() # condition file
         third_subset = df[['ident_block_trial','yc_resp.keys']].dropna() # you choose color choice
         fourth_subset = df[['ident_block_trial', 'owner_confirm_2.keys', 'owner_confirm_2.rt']].dropna() # yc owner confirmation
         fifth_subset = df[['ident_block_trial','choice_confirmation.keys']].dropna() # cc chooses color choice confirmation
@@ -117,8 +118,11 @@ def prepare_data(data_files):
     concatenated_df.loc[concatenated_df['value_distribution'] == 10, 'identifier_chooser_owner_value'] = concatenated_df.loc[concatenated_df['value_distribution'] == 10, 'identifier_chooser_owner_value'].apply(swap_lose_win)
 
     # Rename identifier, stim1, stim2, choice_confirmation.keys columns
-    new_names = {'date':'raw_date','stim1': 'left_color', 'stim2': 'right_color', 'choice_confirmation.keys': 'choice_confirm_keys', 'identifier_chooser_owner_value':'identifier_chooser_owner_value_corr'}
+    new_names = {'date':'raw_date','stim1': 'left_color', 'stim2': 'right_color', 'choice_confirmation.keys': 'choice_confirm_keys', 'identifier_chooser_owner_value':'identifier_chooser_owner_value_corr','experiment_trials.thisTrialN':'trial_index_within_block'}
     concatenated_df = concatenated_df.rename(columns=new_names)
+
+    # Change trial index by one because it's originally starting with 0
+    concatenated_df['trial_index_within_block'] = concatenated_df['trial_index_within_block'] + 1
 
     # Create date and time column from date
     concatenated_df['parsed_datetime'] = concatenated_df['raw_date'].apply(parse_custom_datetime)
@@ -147,7 +151,8 @@ def prepare_data(data_files):
                         'bool_slow_color_choice_or_confirm',
                         'bool_wrong_color_confirm', 
                         'bool_slow_owner_confirm',
-                        'bool_wrong_owner_confirm'
+                        'bool_wrong_owner_confirm',
+                        'trial_index_within_block'
                         ] 
 
     concatenated_df = concatenated_df[relevant_columns]
