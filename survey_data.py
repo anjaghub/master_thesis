@@ -3,6 +3,24 @@ import pandas as pd
 import os
 from functools import reduce
 
+def map_handedness(handedness):
+    if handedness == 'Item 1':
+        handedness_new = 'right'
+    elif handedness == 'Item 2':
+        handedness_new = 'left'
+    else:
+        handedness_new = 'other'
+    return handedness_new
+
+def map_gender(gender):
+    if gender == 'Item 1':
+        gender_new = 'female'
+    elif gender == 'Item 2':
+        gender_new = 'male'
+    else:
+        gender_new = 'other'   
+    return gender_new
+
 def survey_data(data_files):
     # Files and directory of them
     file_names = data_files
@@ -126,5 +144,9 @@ def survey_data(data_files):
                 'survey_end.question4.Row 4' : 'ie4_fate'
                  }
     concatenated_df = concatenated_df.rename(columns=new_names)
+
+    # Exchange gender and handedness values with sense making content
+    concatenated_df['gender'] = concatenated_df['gender'].apply(map_gender)
+    concatenated_df['handedness'] = concatenated_df['handedness'].apply(map_handedness)
 
     return concatenated_df

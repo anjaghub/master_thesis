@@ -81,6 +81,11 @@ def prepare_data(data_files):
             if col not in df.columns:
                 df[col] = pd.NA
 
+        # List of columns to fill NAs with 0
+        columns_to_fill = ['cc_owner.started', 'cc_owner.stopped', 'yc_owner.started', 'yc_owner.stopped']
+        # Fill NAs with 0 in the specified columns
+        df[columns_to_fill] = df[columns_to_fill].fillna(0)
+
         # Creating subsets of data because every trail has several rows in raw data
         first_subset = df[['ident_block_trial','participant','session','date']].drop_duplicates().dropna() # auto create
         second_subset = df[['ident_block_trial','block','trial','chooser','stim1','stim2','choice_frame_location','owner','value','value_distribution','identifier_chooser_owner_value','experiment_trials.thisTrialN']].dropna() # condition file
