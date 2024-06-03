@@ -83,10 +83,12 @@ def survey_data(data_files):
                             'survey_end.question4.Row 3',
                             'survey_end.question4.Row 4']].dropna()
 
-
+        # Reset index if necessary
+        first_subset.reset_index(drop=True, inplace=True)
+        second_subset.reset_index(drop=True, inplace=True)
+        
         # Merging dataframes together so that there is only one line per trial
-        all_subsets = [first_subset, second_subset]
-        merged_df = pd.merge(all_subsets)
+        merged_df = pd.concat([first_subset, second_subset], axis=1)
 
         # Append the DataFrame to the list of dataframes
         dfs.append(merged_df)
@@ -126,7 +128,3 @@ def survey_data(data_files):
     concatenated_df = concatenated_df.rename(columns=new_names)
 
     return concatenated_df
-
-
-data_files = ['data_nora.csv', 'data_clara.csv', 'data_anja.csv']
-df = survey_data(data_files)
