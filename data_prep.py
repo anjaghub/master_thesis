@@ -57,7 +57,11 @@ def prepare_data(data_files):
                         'owner_confirm.rt', # relevant reaction time
                         'wrong_answer.started', # in cc and yc condition when confirming owner
                         'too_slow.started', # in cc and yc condition when confirming owner
-                        'experiment_trials.thisTrialN'
+                        'experiment_trials.thisTrialN',
+                        'cc_owner.started', # time when the owner confirm dialog in cc trials was started (to measure if something was off with keep)
+                        'cc_owner.stopped',
+                        'yc_owner.started', # time when the owner confirm dialog in yc trials was started (to measure if something was off with keep)
+                        'yc_owner.stopped'
                         ] 
 
     # Create empty list to store files
@@ -81,9 +85,9 @@ def prepare_data(data_files):
         first_subset = df[['ident_block_trial','participant','session','date']].drop_duplicates().dropna() # auto create
         second_subset = df[['ident_block_trial','block','trial','chooser','stim1','stim2','choice_frame_location','owner','value','value_distribution','identifier_chooser_owner_value','experiment_trials.thisTrialN']].dropna() # condition file
         third_subset = df[['ident_block_trial','yc_resp.keys']].dropna() # you choose color choice
-        fourth_subset = df[['ident_block_trial', 'owner_confirm_2.keys', 'owner_confirm_2.rt']].dropna() # yc owner confirmation
+        fourth_subset = df[['ident_block_trial', 'owner_confirm_2.keys', 'owner_confirm_2.rt', 'yc_owner.started', 'yc_owner.stopped']].dropna() # yc owner confirmation
         fifth_subset = df[['ident_block_trial','choice_confirmation.keys']].dropna() # cc chooses color choice confirmation
-        sixth_subset = df[['ident_block_trial','owner_confirm.keys', 'owner_confirm.rt']].dropna() # cc chooses owner confirmation
+        sixth_subset = df[['ident_block_trial','owner_confirm.keys', 'owner_confirm.rt', 'cc_owner.started', 'cc_owner.stopped']].dropna() # cc chooses owner confirmation
         seventh_subset = df[['ident_block_trial','wrong_answer.started']].dropna()
         eighth_subset = df[['ident_block_trial','too_slow.started']].dropna()
         ninth_subset = df[['ident_block_trial','too_slow_choice.started']].dropna()
@@ -107,6 +111,10 @@ def prepare_data(data_files):
     # Putting choice_frame_location and yc_resp.keys together and change their values in left and right
     concatenated_df['choice_location'] = concatenated_df['yc_resp.keys'].combine_first(concatenated_df['choice_frame_location'])
     concatenated_df['choice_location'] = concatenated_df['choice_location'].apply(map_choice_location)
+    # Putting owner confirm times in one column
+    concatenated_df['owner_confirm_started'] = concatenated_df['cc_owner.started'].combine_first(concatenated_df['yc_owner.started'])
+    concatenated_df['owner_confirm_stopped'] = concatenated_df['cc_owner.stopped'].combine_first(concatenated_df['yc_owner.stopped'])
+    concatenated_df['owner_confirm_duration'] = concatenated_df['owner_confirm_stopped'] - concatenated_df['owner_confirm_started']
 
     # Create bool columns for too slow and wrong responses
     concatenated_df['bool_wrong_color_confirm'] = ~concatenated_df['wrong_answer_choice.started'].isna()
@@ -120,7 +128,13 @@ def prepare_data(data_files):
     concatenated_df.loc[concatenated_df['value_distribution'] == 10, 'value'] = concatenated_df.loc[concatenated_df['value_distribution'] == 10, 'value'].apply(swap_lose_win)
 
     # Rename identifier, stim1, stim2, choice_confirmation.keys columns
-    new_names = {'date':'raw_date','stim1': 'left_color', 'stim2': 'right_color', 'choice_confirmation.keys': 'choice_confirm_keys', 'identifier_chooser_owner_value':'identifier_chooser_owner_value_corr','experiment_trials.thisTrialN':'trial_index_within_block'}
+    new_names = {'date':'raw_date',
+                 'stim1': 'left_color', 
+                 'stim2': 'right_color', 
+                 'choice_confirmation.keys': 'choice_confirm_keys', 
+                 'identifier_chooser_owner_value':'identifier_chooser_owner_value_corr',
+                 'experiment_trials.thisTrialN':'trial_index_within_block',
+                 }
     concatenated_df = concatenated_df.rename(columns=new_names)
 
     # Change trial index by one because it's originally starting with 0
@@ -154,7 +168,10 @@ def prepare_data(data_files):
                         'bool_wrong_color_confirm', 
                         'bool_slow_owner_confirm',
                         'bool_wrong_owner_confirm',
-                        'trial_index_within_block'
+                        'trial_index_within_block',
+                        'owner_confirm_started',
+                        'owner_confirm_stopped',
+                        'owner_confirm_duration'
                         ] 
 
     concatenated_df = concatenated_df[relevant_columns]
