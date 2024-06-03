@@ -116,6 +116,8 @@ def prepare_data(data_files):
 
     # Correct identifier for the 10% samples where value were changed
     concatenated_df.loc[concatenated_df['value_distribution'] == 10, 'identifier_chooser_owner_value'] = concatenated_df.loc[concatenated_df['value_distribution'] == 10, 'identifier_chooser_owner_value'].apply(swap_lose_win)
+    # Correct value for the 10% samples where value were changed
+    concatenated_df.loc[concatenated_df['value_distribution'] == 10, 'value'] = concatenated_df.loc[concatenated_df['value_distribution'] == 10, 'value'].apply(swap_lose_win)
 
     # Rename identifier, stim1, stim2, choice_confirmation.keys columns
     new_names = {'date':'raw_date','stim1': 'left_color', 'stim2': 'right_color', 'choice_confirmation.keys': 'choice_confirm_keys', 'identifier_chooser_owner_value':'identifier_chooser_owner_value_corr','experiment_trials.thisTrialN':'trial_index_within_block'}
