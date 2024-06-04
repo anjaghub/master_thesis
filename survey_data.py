@@ -4,6 +4,7 @@ import os
 from functools import reduce
 
 def map_handedness(handedness):
+    # Function which maps the answer of the handedness question to understandable values
     if handedness == 'Item 1':
         handedness_new = 'right'
     elif handedness == 'Item 2':
@@ -13,6 +14,7 @@ def map_handedness(handedness):
     return handedness_new
 
 def map_gender(gender):
+    # Function which maps the answer to the gender question to understandable values
     if gender == 'Item 1':
         gender_new = 'female'
     elif gender == 'Item 2':
@@ -22,8 +24,21 @@ def map_gender(gender):
     return gender_new
 
 def survey_data(data_files):
-    # Files and directory of them
-    file_names = data_files
+    """ Function which performs data preprocessing for the questionnaire data by
+    - First taking all the data files from defined location 
+    - Checking one by one which columns are availabe and creating columns which are missing
+    - Creating data subsets and merging data together which belongs to one trial (because of aweful datastorage from PsychoPy)
+    - Renaming columns
+    - Change variable contents so they are easier to understand
+
+    Args:
+        data_files (array of strings): names of all files which should be analysed
+
+    Returns:
+        data frame: holds all preprocessed data in one data frame
+    """
+
+    # Directory of files
     directory = '/Users/anja/Desktop/data_mt/'
 
     # Columns needed from raw file
@@ -60,7 +75,7 @@ def survey_data(data_files):
     # Create empty list to store files
     dfs = []
     # Read the csv files and create columns in case some are missing
-    for file_name in file_names:
+    for file_name in data_files:
         file_path = os.path.join(directory, file_name)
         # Get the available columns
         df_initial = pd.read_csv(file_path, nrows=0) 

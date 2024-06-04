@@ -6,31 +6,52 @@ import matplotlib.pyplot as plt
 from functools import reduce
 from datetime import datetime
 
+def swap_lose_win(identifier):
+# Function to swap 'lose' with 'win' and vice versa
+    if 'lose' in identifier:
+        return identifier.replace('lose', 'win')
+    elif 'win' in identifier:
+        return identifier.replace('win', 'lose')
+    return identifier
+
+
+def map_choice_location(value):
+# Function to change frame location and keys into choice location
+    if value == 'g' or value == '-0.3':
+        return 'left'
+    elif value == 'k' or value == '0.3':
+        return 'right'
+    else:
+        return 'unknown'
+    
+    
+# Function to parse the custom datetime format
+def parse_custom_datetime(dt_str):
+    return datetime.strptime(dt_str, '%Y-%m-%d_%Hh%M.%S.%f')
+
+
 def prepare_data(data_files):
-    # Files and directory of them
-    file_names = data_files
+    """Function which performs data preprocessing for the experimental data by 
+    - First taking all the data files from defined location 
+    - Checking one by one which columns are availabe and creating columns which are missing
+    - Creating data subsets and merging data together which belongs to one trial (because of aweful datastorage from PsychoPy)
+    - Creating combined columns for information which is stored in multiple columns
+    - Correcting the condition variables for the 10% random trials
+    - Change variable contents so they are easier to understand
+    - Renaming columns
+    - Creating indices for trials
+    - Parse date and time
+    - Select only the relevant columns for output
+
+    Args:
+        data_files (array of strings): names of all files which should be analysed
+
+    Returns:
+        data frame: holds all preprocessed data in one data frame
+    """
+
+    # Directory of files
     directory = '/Users/anja/Desktop/data_mt/'
-
-    # Function to swap 'lose' with 'win' and vice versa
-    def swap_lose_win(identifier):
-        if 'lose' in identifier:
-            return identifier.replace('lose', 'win')
-        elif 'win' in identifier:
-            return identifier.replace('win', 'lose')
-        return identifier
-
-    # Function to change frame location and keys into choice location
-    def map_choice_location(value):
-        if value == 'g' or value == '-0.3':
-            return 'left'
-        elif value == 'k' or value == '0.3':
-            return 'right'
-        else:
-            return 'unknown'
-        
-    # Function to parse the custom datetime format
-    def parse_custom_datetime(dt_str):
-        return datetime.strptime(dt_str, '%Y-%m-%d_%Hh%M.%S.%f')
 
     # Columns needed from raw file
     desired_columns = ['ident_block_trial', # identifier to determine trial, because dataset is off
@@ -67,7 +88,7 @@ def prepare_data(data_files):
     # Create empty list to store files
     dfs = []
     # Read the csv files and create columns in case some are missing
-    for file_name in file_names:
+    for file_name in data_files:
         file_path = os.path.join(directory, file_name)
         # Get the available columns
         df_initial = pd.read_csv(file_path, nrows=0) 
