@@ -8,4 +8,8 @@ This means that the study varies three different variables all with two factors:
 The primary measure of interest is the participants' reaction time to the outcome attribution, which represents the degree of conflict they face with outcome of the action-decision situation. Additional questionnaires or specific question items may be integrated into the study design to assess factors such as personality traits or depression scales, which could potentially elucidate the research findings concerning self-agency.
 
 ## 🧬 Structure of this Repository
-There are several files, solving differnet purposes. First the data_prep.py script wich prepares data for analysis by merging, renaming, deleting, etc.. Second the extra script, survey_data.py to preproccess the data of the questionnaires in the beginning and end of the experiment. The data_check.py file which helped us understand the data before starting the testing; we checked distribution of our variables for counterbalancing and so on. And last but not least the analysis.ipynb script where the real collected data will be analysed.
+There are several files, solving differnet purposes. 
+1. The data_prep.py script wich prepares data for analysis by merging, renaming, deleting, etc...
+2. The survey_data.py script to preproccess the data of the questionnaires in the beginning and end of the experiment
+3. The data_check.py file which helped us understand the data before starting the testing; we checked distribution of our variables for counterbalancing and so on
+4. Last but not least the analysis.ipynb script where the real collected data will be analysed
