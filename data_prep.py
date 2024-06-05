@@ -194,10 +194,8 @@ def prepare_data(data_files):
                         'bool_wrong_color_confirm', 
                         'bool_slow_owner_confirm',
                         'bool_wrong_owner_confirm',
-                        'trial_index_within_block',
-                        'owner_confirm_started',
-                        'owner_confirm_stopped',
-                        'owner_confirm_duration'
+                        'trial_index_within_block'
+                        #'owner_confirm_duration'
                         ] 
 
     concatenated_df = concatenated_df[relevant_columns]
