@@ -87,8 +87,8 @@ def prepare_data(data_files):
                         'balance.stopped',
                         'fixation.started',
                         'fixation.stopped',
-                        'round_info.started',
-                        'round_info.stopped',
+                        #'round_info.started',
+                        #'round_info.stopped',
                         'yc_choice.started',
                         'yc_choice.stopped',
                         'cc_choice.started',
@@ -133,8 +133,8 @@ def prepare_data(data_files):
                            'balance.stopped',
                            'fixation.started',
                            'fixation.stopped',
-                           'round_info.started',
-                           'round_info.stopped',
+                           #'round_info.started',
+                           #'round_info.stopped',
                            'yc_choice.started',
                            'yc_choice.stopped',
                            'cc_choice.started',
@@ -159,7 +159,9 @@ def prepare_data(data_files):
         first_subset = df[['ident_block_trial',
                            'participant',
                            'session',
-                           'date'
+                           'date',
+                           'fixation.started',
+                           'fixation.stopped',
                            ]].drop_duplicates().dropna() # auto create
         
         second_subset = df[['ident_block_trial',
@@ -180,16 +182,10 @@ def prepare_data(data_files):
         
         third_subset = df[['ident_block_trial',
                            'yc_resp.keys',
-                           'fixation.started',
-                           'fixation.stopped',
-                           'round_info.started',
-                           'round_info.stopped',
+                           #'round_info.started',
+                           #'round_info.stopped',
                            'yc_choice.started',
                            'yc_choice.stopped',
-                           'cc_choice.started',
-                           'cc_choice.stopped',
-                           'cc_choice_confirm.started',
-                           'cc_choice_confirm.stopped'
                            ]].dropna() # you choose color choice
         
         fourth_subset = df[['ident_block_trial', 
@@ -217,7 +213,11 @@ def prepare_data(data_files):
                            'cc_value.started',
                            'cc_value.stopped',
                            'cc_owner_confirm.started',
-                           'cc_owner_confirm.stopped'
+                           'cc_owner_confirm.stopped',
+                           'cc_choice.started',
+                           'cc_choice.stopped',
+                           'cc_choice_confirm.started',
+                           'cc_choice_confirm.stopped'
                            ]].dropna() # cc chooses owner confirmation
         
         seventh_subset = df[['ident_block_trial', 'wrong_answer.started']].dropna()
@@ -257,7 +257,7 @@ def prepare_data(data_files):
     concatenated_df['choice_confirm_stopped'] = concatenated_df['cc_choice_confirm.stopped'].combine_first(concatenated_df['yc_draw_frame.stopped'])
 
     # Calculate durations
-    concatenated_df['round_info_duration'] = concatenated_df['round_info.stopped'] - concatenated_df['round_info.started']
+    #concatenated_df['round_info_duration'] = concatenated_df['round_info.stopped'] - concatenated_df['round_info.started']
     concatenated_df['fixation_duration'] = concatenated_df['fixation.stopped'] - concatenated_df['fixation.started']
     concatenated_df['balance_duration'] = concatenated_df['balance.stopped'] - concatenated_df['balance.started']
     
@@ -323,7 +323,7 @@ def prepare_data(data_files):
                         'bool_wrong_owner_confirm',
                         'trial_index_within_block',
                         'owner_duration',
-                        'round_info_duration',
+                        #'round_info_duration',
                         'fixation_duration',
                         'cc_choice_duration',
                         'choice_confirm_duration',
