@@ -243,25 +243,31 @@ def prepare_data(data_files):
     # Putting choice_frame_location and yc_resp.keys together and change their values in left and right
     concatenated_df['choice_location'] = concatenated_df['yc_resp.keys'].combine_first(concatenated_df['choice_frame_location'])
     concatenated_df['choice_location'] = concatenated_df['choice_location'].apply(map_choice_location)
+    # Putting owner times in one column
+    concatenated_df['owner_started'] = concatenated_df['cc_owner.started'].combine_first(concatenated_df['yc_owner.started'])
+    concatenated_df['owner_stopped'] = concatenated_df['cc_owner.stopped'].combine_first(concatenated_df['yc_owner.stopped'])
+    # Putting value times in one column
+    concatenated_df['value_started'] = concatenated_df['cc_value.started'].combine_first(concatenated_df['yc_value.started'])
+    concatenated_df['value_stopped'] = concatenated_df['cc_value.stopped'].combine_first(concatenated_df['yc_value.stopped'])
     # Putting owner confirm times in one column
-    concatenated_df['owner_confirm_started'] = concatenated_df['cc_owner.started'].combine_first(concatenated_df['yc_owner.started'])
-    concatenated_df['owner_confirm_stopped'] = concatenated_df['cc_owner.stopped'].combine_first(concatenated_df['yc_owner.stopped'])
-    
+    concatenated_df['owner_confirm_started'] = concatenated_df['cc_owner_confirm.started'].combine_first(concatenated_df['yc_owner_confirm.started'])
+    concatenated_df['owner_confirm_stopped'] = concatenated_df['cc_owner_confirm.stopped'].combine_first(concatenated_df['yc_owner_confirm.stopped'])
+    # Putting choice confirm times in one column
+    concatenated_df['choice_confirm_started'] = concatenated_df['cc_choice_confirm.started'].combine_first(concatenated_df['yc_draw_frame.started'])
+    concatenated_df['choice_confirm_stopped'] = concatenated_df['cc_choice_confirm.stopped'].combine_first(concatenated_df['yc_draw_frame.stopped'])
+
     # Calculate durations
     concatenated_df['round_info_duration'] = concatenated_df['round_info.stopped'] - concatenated_df['round_info.started']
     concatenated_df['fixation_duration'] = concatenated_df['fixation.stopped'] - concatenated_df['fixation.started']
-    concatenated_df['cc_choice_duration'] = concatenated_df['cc_choice.stopped'] - concatenated_df['cc_choice.started']
-    concatenated_df['cc_choice_confirm_duration'] = concatenated_df['cc_choice_confirm.stopped'] - concatenated_df['cc_choice_confirm.started']
-    concatenated_df['cc_value_duration'] = concatenated_df['cc_value.stopped'] - concatenated_df['cc_value.started']
-    concatenated_df['cc_owner_confirm_duration'] = concatenated_df['cc_owner_confirm.stopped'] - concatenated_df['cc_owner_confirm.started']
-
-    concatenated_df['yc_choice_duration'] = concatenated_df['yc_choice.stopped'] - concatenated_df['yc_choice.started']
-    concatenated_df['yc_draw_frame_duration'] = concatenated_df['yc_draw_frame.stopped'] - concatenated_df['yc_draw_frame.started']
-    concatenated_df['yc_value_duration'] = concatenated_df['yc_value.stopped'] - concatenated_df['yc_value.started']
-    concatenated_df['yc_owner_confirm_duration'] = concatenated_df['yc_owner_confirm.stopped'] - concatenated_df['yc_owner_confirm.started']
     concatenated_df['balance_duration'] = concatenated_df['balance.stopped'] - concatenated_df['balance.started']
-
+    
+    concatenated_df['cc_choice_duration'] = concatenated_df['cc_choice.stopped'] - concatenated_df['cc_choice.started']
+    concatenated_df['yc_choice_duration'] = concatenated_df['yc_choice.stopped'] - concatenated_df['yc_choice.started']
+   
     concatenated_df['owner_confirm_duration'] = concatenated_df['owner_confirm_stopped'] - concatenated_df['owner_confirm_started']
+    concatenated_df['value_duration'] = concatenated_df['value_stopped'] - concatenated_df['value_started']
+    concatenated_df['owner_duration'] = concatenated_df['owner_stopped'] - concatenated_df['owner_started']
+    concatenated_df['choice_confirm_duration'] = concatenated_df['choice_confirm_stopped'] - concatenated_df['choice_confirm_started']
 
     # Create bool columns for too slow and wrong responses
     concatenated_df['bool_wrong_color_confirm'] = ~concatenated_df['wrong_answer_choice.started'].isna()
@@ -316,17 +322,14 @@ def prepare_data(data_files):
                         'bool_slow_owner_confirm',
                         'bool_wrong_owner_confirm',
                         'trial_index_within_block',
-                        'owner_confirm_duration',
+                        'owner_duration',
                         'round_info_duration',
                         'fixation_duration',
                         'cc_choice_duration',
-                        'cc_choice_confirm_duration',
-                        'cc_value_duration',
-                        'cc_owner_confirm_duration',
+                        'choice_confirm_duration',
+                        'value_duration',
+                        'owner_confirm_duration',
                         'yc_choice_duration',
-                        'yc_draw_frame_duration',
-                        'yc_value_duration',
-                        'yc_owner_confirm_duration',
                         'balance_duration'
                         ] 
 
