@@ -173,7 +173,7 @@ def prepare_data(data_files):
                             'value',
                             'value_distribution',
                             'identifier_chooser_owner_value',
-                            'experiment_trials.thisTrialN'
+                            'experiment_trials.thisTrialN',
                             'balance.started',
                             'balance.stopped'
                             ]].dropna() # condition file
