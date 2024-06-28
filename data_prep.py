@@ -251,9 +251,9 @@ def prepare_data(data_files):
     concatenated_df['round_info_duration'] = concatenated_df['round_info.stopped'] - concatenated_df['round_info.started']
     concatenated_df['fixation_duration'] = concatenated_df['fixation.stopped'] - concatenated_df['fixation.started']
     concatenated_df['cc_choice_duration'] = concatenated_df['cc_choice.stopped'] - concatenated_df['cc_choice.started']
-    concatenated_df['cc_choice_confirm_duration'] = concatenated_df['cc_choice_confirm.stopped'] - concatenated_df['c_choice_confirm.started']
-    concatenated_df['cc_value_duration'] = concatenated_df['cc_value.stopped'] - concatenated_df['oc_value.started']
-    concatenated_df['cc_owner_confirm_duration'] = concatenated_df['cc_onwer_confirm.stopped'] - concatenated_df['cc_onwer_confirm.started']
+    concatenated_df['cc_choice_confirm_duration'] = concatenated_df['cc_choice_confirm.stopped'] - concatenated_df['cc_choice_confirm.started']
+    concatenated_df['cc_value_duration'] = concatenated_df['cc_value.stopped'] - concatenated_df['cc_value.started']
+    concatenated_df['cc_owner_confirm_duration'] = concatenated_df['cc_owner_confirm.stopped'] - concatenated_df['cc_owner_confirm.started']
 
     concatenated_df['yc_choice_duration'] = concatenated_df['yc_choice.stopped'] - concatenated_df['yc_choice.started']
     concatenated_df['yc_draw_frame_duration'] = concatenated_df['yc_draw_frame.stopped'] - concatenated_df['yc_draw_frame.started']
