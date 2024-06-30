@@ -78,33 +78,7 @@ def prepare_data(data_files):
                         'owner_confirm.rt', # relevant reaction time
                         'wrong_answer.started', # in cc and yc condition when confirming owner
                         'too_slow.started', # in cc and yc condition when confirming owner
-                        'experiment_trials.thisTrialN',
-                        'cc_owner.started', # time when the owner confirm dialog in cc trials was started (to measure if something was off with keep)
-                        'cc_owner.stopped',
-                        'yc_owner.started', # time when the owner confirm dialog in yc trials was started (to measure if something was off with keep)
-                        'yc_owner.stopped',
-                        'balance.started',
-                        'balance.stopped',
-                        'fixation.started',
-                        'fixation.stopped',
-                        #'round_info.started',
-                        #'round_info.stopped',
-                        'yc_choice.started',
-                        'yc_choice.stopped',
-                        'cc_choice.started',
-                        'cc_choice.stopped',
-                        'cc_choice_confirm.started',
-                        'cc_choice_confirm.stopped',
-                        'yc_draw_frame.started',
-                        'yc_draw_frame.stopped',
-                        'yc_value.started',
-                        'yc_value.stopped',
-                        'yc_owner_confirm.started',
-                        'yc_owner_confirm.stopped',
-                        'cc_value.started',
-                        'cc_value.stopped',
-                        'cc_owner_confirm.started',
-                        'cc_owner_confirm.stopped'
+                        'experiment_trials.thisTrialN'
                         ] 
 
     # Create empty list to store files
@@ -124,44 +98,11 @@ def prepare_data(data_files):
             if col not in df.columns:
                 df[col] = pd.NA
 
-        # List of columns to fill NAs with 0
-        columns_to_fill = ['cc_owner.started', 
-                           'cc_owner.stopped', 
-                           'yc_owner.started', 
-                           'yc_owner.stopped',
-                           'balance.started',
-                           'balance.stopped',
-                           'fixation.started',
-                           'fixation.stopped',
-                           #'round_info.started',
-                           #'round_info.stopped',
-                           'yc_choice.started',
-                           'yc_choice.stopped',
-                           'cc_choice.started',
-                           'cc_choice.stopped',
-                           'cc_choice_confirm.started',
-                           'cc_choice_confirm.stopped',
-                           'yc_draw_frame.started',
-                           'yc_draw_frame.stopped',
-                           'yc_value.started',
-                           'yc_value.stopped',
-                           'yc_owner_confirm.started',
-                           'yc_owner_confirm.stopped',
-                           'cc_value.started',
-                           'cc_value.stopped',
-                           'cc_owner_confirm.started',
-                           'cc_owner_confirm.stopped'
-                           ]
-        # Fill NAs with 0 in the specified columns
-        df[columns_to_fill] = df[columns_to_fill].fillna(0)
-
         # Creating subsets of data because every trail has several rows in raw data
         first_subset = df[['ident_block_trial',
                            'participant',
                            'session',
-                           'date',
-                           'fixation.started',
-                           'fixation.stopped',
+                           'date'
                            ]].drop_duplicates().dropna() # auto create
         
         second_subset = df[['ident_block_trial',
@@ -175,30 +116,16 @@ def prepare_data(data_files):
                             'value',
                             'value_distribution',
                             'identifier_chooser_owner_value',
-                            'experiment_trials.thisTrialN',
-                            'balance.started',
-                            'balance.stopped'
+                            'experiment_trials.thisTrialN'
                             ]].dropna() # condition file
         
         third_subset = df[['ident_block_trial',
-                           'yc_resp.keys',
-                           #'round_info.started',
-                           #'round_info.stopped',
-                           'yc_choice.started',
-                           'yc_choice.stopped',
+                           'yc_resp.keys'
                            ]].dropna() # you choose color choice
         
         fourth_subset = df[['ident_block_trial', 
                             'owner_confirm_2.keys', 
-                            'owner_confirm_2.rt', 
-                            'yc_owner.started', 
-                            'yc_owner.stopped',
-                            'yc_draw_frame.started',
-                            'yc_draw_frame.stopped',
-                            'yc_value.started',
-                            'yc_value.stopped',
-                            'yc_owner_confirm.started',
-                            'yc_owner_confirm.stopped'
+                            'owner_confirm_2.rt'
                             ]].dropna() # yc owner confirmation
         
         fifth_subset = df[['ident_block_trial',
@@ -207,17 +134,7 @@ def prepare_data(data_files):
         
         sixth_subset = df[['ident_block_trial',
                            'owner_confirm.keys', 
-                           'owner_confirm.rt', 
-                           'cc_owner.started', 
-                           'cc_owner.stopped',
-                           'cc_value.started',
-                           'cc_value.stopped',
-                           'cc_owner_confirm.started',
-                           'cc_owner_confirm.stopped',
-                           'cc_choice.started',
-                           'cc_choice.stopped',
-                           'cc_choice_confirm.started',
-                           'cc_choice_confirm.stopped'
+                           'owner_confirm.rt'
                            ]].dropna() # cc chooses owner confirmation
         
         seventh_subset = df[['ident_block_trial', 'wrong_answer.started']].dropna()
@@ -243,31 +160,6 @@ def prepare_data(data_files):
     # Putting choice_frame_location and yc_resp.keys together and change their values in left and right
     concatenated_df['choice_location'] = concatenated_df['yc_resp.keys'].combine_first(concatenated_df['choice_frame_location'])
     concatenated_df['choice_location'] = concatenated_df['choice_location'].apply(map_choice_location)
-    # Putting owner times in one column
-    concatenated_df['owner_started'] = concatenated_df['cc_owner.started'].combine_first(concatenated_df['yc_owner.started'])
-    concatenated_df['owner_stopped'] = concatenated_df['cc_owner.stopped'].combine_first(concatenated_df['yc_owner.stopped'])
-    # Putting value times in one column
-    concatenated_df['value_started'] = concatenated_df['cc_value.started'].combine_first(concatenated_df['yc_value.started'])
-    concatenated_df['value_stopped'] = concatenated_df['cc_value.stopped'].combine_first(concatenated_df['yc_value.stopped'])
-    # Putting owner confirm times in one column
-    concatenated_df['owner_confirm_started'] = concatenated_df['cc_owner_confirm.started'].combine_first(concatenated_df['yc_owner_confirm.started'])
-    concatenated_df['owner_confirm_stopped'] = concatenated_df['cc_owner_confirm.stopped'].combine_first(concatenated_df['yc_owner_confirm.stopped'])
-    # Putting choice confirm times in one column
-    concatenated_df['choice_confirm_started'] = concatenated_df['cc_choice_confirm.started'].combine_first(concatenated_df['yc_draw_frame.started'])
-    concatenated_df['choice_confirm_stopped'] = concatenated_df['cc_choice_confirm.stopped'].combine_first(concatenated_df['yc_draw_frame.stopped'])
-
-    # Calculate durations
-    #concatenated_df['round_info_duration'] = concatenated_df['round_info.stopped'] - concatenated_df['round_info.started']
-    concatenated_df['fixation_duration'] = concatenated_df['fixation.stopped'] - concatenated_df['fixation.started']
-    concatenated_df['balance_duration'] = concatenated_df['balance.stopped'] - concatenated_df['balance.started']
-    
-    concatenated_df['cc_choice_duration'] = concatenated_df['cc_choice.stopped'] - concatenated_df['cc_choice.started']
-    concatenated_df['yc_choice_duration'] = concatenated_df['yc_choice.stopped'] - concatenated_df['yc_choice.started']
-   
-    concatenated_df['owner_confirm_duration'] = concatenated_df['owner_confirm_stopped'] - concatenated_df['owner_confirm_started']
-    concatenated_df['value_duration'] = concatenated_df['value_stopped'] - concatenated_df['value_started']
-    concatenated_df['owner_duration'] = concatenated_df['owner_stopped'] - concatenated_df['owner_started']
-    concatenated_df['choice_confirm_duration'] = concatenated_df['choice_confirm_stopped'] - concatenated_df['choice_confirm_started']
 
     # Create bool columns for too slow and wrong responses
     concatenated_df['bool_wrong_color_confirm'] = ~concatenated_df['wrong_answer_choice.started'].isna()
@@ -321,16 +213,7 @@ def prepare_data(data_files):
                         'bool_wrong_color_confirm', 
                         'bool_slow_owner_confirm',
                         'bool_wrong_owner_confirm',
-                        'trial_index_within_block',
-                        'owner_duration',
-                        #'round_info_duration',
-                        'fixation_duration',
-                        'cc_choice_duration',
-                        'choice_confirm_duration',
-                        'value_duration',
-                        'owner_confirm_duration',
-                        'yc_choice_duration',
-                        'balance_duration'
+                        'trial_index_within_block'
                         ] 
 
     concatenated_df = concatenated_df[relevant_columns]
