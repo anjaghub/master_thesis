@@ -3,7 +3,7 @@ import pandas as pd
 import os
 from pathlib import Path
 
-def check_timin():
+def check_timing():
     # List all data files which should be preprocessed
     directory = Path('/Users/anja/Desktop/data_mt')
     data_files = [file.name for file in directory.glob('*.csv')]
