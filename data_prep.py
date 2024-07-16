@@ -191,32 +191,6 @@ def prepare_data(data_files):
     concatenated_df['date'] = concatenated_df['parsed_datetime'].dt.date
     concatenated_df['time'] = concatenated_df['parsed_datetime'].dt.time
 
-    # Create balance_you and balance_cozmo columns
-    # Initialize balance columns
-    concatenated_df["balance_you"] = 0
-    concatenated_df["balance_cozmo"] = 0
-
-    # Initialize balance trackers
-    balance_you = 0
-    balance_cozmo = 0
-    current_block = df.loc[0, "block"]
-
-    for i, row in concatenated_df.iterrows():
-        if row["block"] != current_block:
-            # Reset balances for a new block
-            balance_you = 0
-            balance_cozmo = 0
-            current_block = row["block"]
-        
-        if row["owner"] == "you":
-            balance_you += row["value"]
-        elif row["owner"] == "Cozmo":
-            balance_cozmo += row["value"]
-        
-        # Update the dataframe with current balances
-        concatenated_df.at[i, "balance_you"] = balance_you
-        concatenated_df.at[i, "balance_cozmo"] = balance_cozmo
-
     # Select new relevant columns and get rid of the old ones which are not necessary anymore
     relevant_columns = ['date', # date when data collection happened
                         'time',
