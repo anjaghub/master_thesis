@@ -23,6 +23,18 @@ def map_gender(gender):
         gender_new = 'other'   
     return gender_new
 
+def map_cesdr_values(value):
+    if value == 'Column 1': # not at all or less than
+        return 0
+    elif value == 'Column 2': # 1-2 days
+        return 1
+    elif value == 'Column 3': # 3-4 days
+        return 2
+    elif value == 'Column 4': # 5-7 days
+        return 3
+    else: # everyday in two weeks
+        return 4
+
 def survey_data(data_files):
     """ Function which performs data preprocessing for the questionnaire data by
     - First taking all the data files from defined location 
@@ -159,6 +171,14 @@ def survey_data(data_files):
                 'survey_end.question4.Row 4' : 'ie4_fate'
                  }
     concatenated_df = concatenated_df.rename(columns=new_names)
+
+    # Change the values of the CESDR columns according to analysis standard
+    columns_to_map = [col for col in concatenated_df.columns if 'cesdr' in col]
+    for column in columns_to_map:
+        concatenated_df[column] = concatenated_df[column].apply(map_cesdr_values)
+
+    # Create the total CESDR score
+    concatenated_df['cesdr_total_score'] = concatenated_df[columns_to_map].sum(axis=1)
 
     # Exchange gender and handedness values with sense making content
     concatenated_df['gender'] = concatenated_df['gender'].apply(map_gender)
