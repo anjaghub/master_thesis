@@ -34,6 +34,18 @@ def map_cesdr_values(value):
         return 3
     else: # everyday in two weeks
         return 4
+    
+def map_ie4_values(value):
+    if value == 'Column 1': # doesn't apply
+        return 1
+    elif value == 'Column 2': # applies a bit
+        return 2
+    elif value == 'Column 3': # applies somewhat
+        return 3
+    elif value == 'Column 4': # applies mostly
+        return 4
+    else: # applies completely
+        return 5
 
 def survey_data(data_files):
     """ Function which performs data preprocessing for the questionnaire data by
@@ -176,9 +188,19 @@ def survey_data(data_files):
     columns_to_map = [col for col in concatenated_df.columns if 'cesdr' in col]
     for column in columns_to_map:
         concatenated_df[column] = concatenated_df[column].apply(map_cesdr_values)
-
     # Create the total CESDR score
     concatenated_df['cesdr_total_score'] = concatenated_df[columns_to_map].sum(axis=1)
+
+    # Change the values of the ie4 columns according to analysis standard
+    columns_to_map = [col for col in concatenated_df.columns if 'ie4' in col]
+    for column in columns_to_map:
+        concatenated_df[column] = concatenated_df[column].apply(map_ie4_values)   
+    # Reverse external scores
+    concatenated_df["ie4_determined_by_others"] = 6 - concatenated_df["ie4_determined_by_others"]
+    concatenated_df["ie4_fate"] = 6 - concatenated_df["ie4_fate"] 
+    # Create total IE4 scores
+    concatenated_df['ie4_internal_total_score'] = concatenated_df['ie4_own_boss'] + concatenated_df['ie4_will_succeed']
+    concatenated_df['ie4_external_total_score'] = concatenated_df['ie4_fate'] + concatenated_df['ie4_determined_by_others']
 
     # Exchange gender and handedness values with sense making content
     concatenated_df['gender'] = concatenated_df['gender'].apply(map_gender)
